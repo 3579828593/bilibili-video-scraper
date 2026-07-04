@@ -45,7 +45,7 @@ class TestMixinKey(unittest.TestCase):
 
     def test_mixin_key_deterministic(self):
         """相同输入应产生相同输出"""
-        orig = "test1234abcxyz9876test1234abcxyz9876"
+        orig = "test1234abcxyz9876" * 4  # 72 chars, > 64 满足索引需求
         r1 = _get_mixin_key(orig)
         r2 = _get_mixin_key(orig)
         self.assertEqual(r1, r2)
@@ -68,8 +68,8 @@ class TestWBISign(unittest.TestCase):
         params = {"mid": "177230427", "ps": "50", "pn": "1"}
         signed = calc_wbi_sign(
             params,
-            img_key="test_img_key_for_unit_test",
-            sub_key="test_sub_key_for_unit_test",
+            img_key="test_img_key_for_unit_test_padding_32",
+            sub_key="test_sub_key_for_unit_test_padding_32",
         )
         self.assertIn("w_rid", signed)
         self.assertIn("wts", signed)
