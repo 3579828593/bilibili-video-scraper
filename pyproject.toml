@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "bilibili-video-scraper"
+version = "1.0.0"
+description = "B站UP主视频标题批量抓取与分析工具 — 基于 WBI 签名的 Bilibili API"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "bilibili-video-scraper contributors"}
+]
+keywords = ["bilibili", "scraper", "video", "api", "wbi", "数据分析"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Text Processing",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "requests>=2.28.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "pytest-cov"]
+
+[project.scripts]
+bilibili-scraper = "main:main"
+
+[project.urls]
+Homepage = "https://github.com/3579828593/bilibili-video-scraper"
+Repository = "https://github.com/3579828593/bilibili-video-scraper.git"
+Issues = "https://github.com/3579828593/bilibili-video-scraper/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
