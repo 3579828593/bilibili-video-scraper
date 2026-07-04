@@ -20,14 +20,53 @@ Bilibili Video Scraper - CLI 入口
 """
 
 import argparse
+import csv
+import json
 import os
 import sys
+from datetime import datetime
 
 # 确保可以导入 src 包
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from src.scraper import scrape_uploader, BilibiliScraper
 from src.analyzer import VideoAnalyzer
+
+
+def export_csv(json_path: str, csv_path: str | None = None) -> str:
+    """将 JSON 数据导出为 CSV 格式
+
+    Args:
+        json_path: JSON 数据文件路径
+        csv_path: CSV 输出路径（默认与 JSON 同目录，扩展名改为 .csv）
+
+    Returns:
+        实际保存的 CSV 文件路径
+    """
+    if csv_path is None:
+        csv_path = json_path.rsplit(".", 1)[0] + ".csv"
+
+    with open(json_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    videos = data.get("videos", [])
+
+    fieldnames = ["title", "bvid", "created", "created_date", "play", "length", "comment", "description"]
+
+    with open(csv_path, "w", newline="", encoding="utf-8-sig") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
+        writer.writeheader()
+        for v in videos:
+            row = dict(v)
+            # 将 Unix 时间戳转换为可读日期
+            if "created" in row and row["created"]:
+                try:
+                    row["created_date"] = datetime.fromtimestamp(row["created"]).strftime("%Y-%m-%d %H:%M")
+                except (ValueError, OSError):
+                    row["created_date"] = ""
+            writer.writerow(row)
+
+    return csv_path
 
 
 def parse_args():
@@ -83,6 +122,10 @@ def parse_args():
         "--quiet", "-q", action="store_true",
         help="静默模式，减少日志输出",
     )
+    parser.add_argument(
+        "--csv", action="store_true",
+        help="同时导出 CSV 格式数据（方便用 Excel 打开）",
+    )
 
     return parser.parse_args()
 
@@ -127,6 +170,12 @@ def main():
             sys.exit(1)
         print(f"📂 使用已有数据文件: {json_path}")
 
+    # ===== 阶段 1.5: CSV 导出（可选）=====
+    csv_path = None
+    if args.csv:
+        csv_path = export_csv(json_path)
+        print(f"📄 CSV 已导出: {csv_path}")
+
     # ===== 阶段 2: 数据分析（可选）=====
     if args.analyze:
         print()
@@ -150,6 +199,8 @@ def main():
             print()
             print(f"🎉 全部完成！")
             print(f"   数据文件: {json_path}")
+            if csv_path:
+                print(f"   CSV 文件: {csv_path}")
             print(f"   分析报告: {report_path}")
         except Exception as e:
             print(f"❌ 分析失败: {e}")
@@ -158,6 +209,8 @@ def main():
     else:
         print()
         print(f"✅ 数据已保存至: {json_path}")
+        if csv_path:
+            print(f"   CSV 文件: {csv_path}")
         print('   💡 使用 --analyze 参数可自动生成分析报告')
 
 
