@@ -1,21 +1,47 @@
+<div align="center">
+
 # 🎬 Bilibili Video Scraper
 
-> **B站 UP 主视频标题批量抓取与分析工具** — 基于 WBI 签名的 Bilibili API，一键获取任意 UP 主的全部视频元数据，并自动生成智能分析报告。
+**B站 UP 主视频标题批量抓取与分析工具**
 
-![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-blue.svg)
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+基于 WBI 签名的 Bilibili API，一键获取任意 UP 主的全部视频元数据，并自动生成智能分析报告。
+
+[![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/3579828593/bilibili-video-scraper?style=social)](https://github.com/3579828593/bilibili-video-scraper/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/3579828593/bilibili-video-scraper)](https://github.com/3579828593/bilibili-video-scraper/issues)
+[![GitHub release](https://img.shields.io/badge/release-v1.0.0-blue)](https://github.com/3579828593/bilibili-video-scraper/releases)
+
+[中文](README.md) | [English](README_EN.md)
+
+</div>
+
+---
+
+> ## ⚠️ 免责声明
+>
+> 本工具**仅供学习、研究和个人使用**，不用于任何商业目的。
+>
+> - 使用本工具时请遵守 [Bilibili 用户协议](https://www.bilibili.com/protocal/licence.html) 和 `robots.txt` 规则
+> - 请勿对本站 API 施加过大压力，默认请求间隔 0.5 秒
+> - 本工具不会存储或传输用户登录凭证
+> - **使用者须自行承担因不当使用产生的全部法律责任**
+> - 如本仓库内容侵犯任何第三方权益，请联系作者删除
 
 ---
 
 ## ✨ 功能特性
 
-- 🚀 **全量抓取** — 通过 WBI 签名 API 自动分页获取 UP 主全部视频（支持数百甚至数千条）
-- 🔐 **无需登录** — 基于 WBI (Web Bilibili Interface) 签名算法，无需 Cookie 即可调用
-- 📊 **智能分析** — 自动从标题提取游戏名称、分类统计、年度趋势、播放量排行
-- 📝 **Markdown 报告** — 一键生成结构化的 Markdown 分析报告
-- ⚡ **断点续传** — 失败页面记录在案，支持后续补抓
-- 🛠️ **CLI 工具** — 命令行参数灵活配置，支持自定义输出路径、分页大小、重试策略
-- 📦 **即开即用** — 零配置，`pip install -r requirements.txt && python main.py --mid <UID>` 即可运行
+| 功能 | 说明 |
+|------|------|
+| 🚀 全量抓取 | 通过 WBI 签名 API 自动分页获取 UP 主全部视频（支持数百甚至数千条） |
+| 🔐 无需登录 | 基于 WBI (Web Bilibili Interface) 签名算法，无需 Cookie 即可调用 |
+| 📊 智能分析 | 自动从标题提取游戏名称、分类统计、年度趋势、播放量排行 |
+| 📝 Markdown 报告 | 一键生成结构化的 Markdown 分析报告 |
+| 📄 CSV 导出 | 支持导出 CSV 格式，方便用 Excel/Sheets 进一步分析 |
+| ⚡ 断点续传 | 失败页面记录在案，支持后续补抓 |
+| 🛠️ CLI 工具 | 命令行参数灵活配置，支持自定义输出路径、分页大小、重试策略 |
+| 📦 即开即用 | 零配置，`pip install -r requirements.txt && python main.py --mid <UID>` 即可运行 |
 
 ---
 
@@ -84,7 +110,7 @@
 
 ```bash
 # 1. 克隆项目
-git clone https://github.com/YOUR_USERNAME/bilibili-video-scraper.git
+git clone https://github.com/3579828593/bilibili-video-scraper.git
 cd bilibili-video-scraper
 
 # 2. 创建虚拟环境（推荐）
@@ -121,6 +147,13 @@ python main.py --mid 177230427 --analyze
 python main.py --mid 177230427 --analyze --report report.md
 ```
 
+#### 导出 CSV 格式
+
+```bash
+# 抓取并导出为 CSV（方便用 Excel 打开）
+python main.py --mid 177230427 --csv
+```
+
 #### 离线分析 — 使用已有数据
 
 ```bash
@@ -147,6 +180,7 @@ python main.py --mid 177230427 -q
 | `--output` | `-o` | `up_{mid}.json` | 输出 JSON 文件路径 |
 | `--analyze` | — | `False` | 是否在抓取后自动生成分析报告 |
 | `--report` | — | `up_{mid}.md` | 分析报告输出路径 |
+| `--csv` | — | `False` | 同时导出 CSV 格式数据 |
 | `--page-size` | — | `50` | 每页抓取数量（1~100） |
 | `--delay` | — | `0.5` | 请求间隔秒数 |
 | `--retries` | — | `3` | 单页最大重试次数 |
@@ -167,8 +201,13 @@ bilibili-video-scraper/
 │   └── README.md            # 示例说明
 ├── tests/                    # 单元测试
 │   └── test_scraper.py      # 测试用例
+├── .github/                  # GitHub 配置
+│   ├── workflows/ci.yml     # CI 自动测试
+│   └── ISSUE_TEMPLATE/      # Issue 模板
 ├── main.py                   # CLI 入口
 ├── requirements.txt          # Python 依赖
+├── CONTRIBUTING.md          # 贡献指南
+├── SECURITY.md              # 安全策略
 ├── .gitignore               # Git 忽略规则
 ├── LICENSE                  # MIT 开源协议
 └── README.md                # 本文件
@@ -180,13 +219,13 @@ bilibili-video-scraper/
 
 ### 1. WBI 签名 (`src/wbi_signer.py`)
 
-基于 [bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect) 实现的 WBI 签名算法：
+实现 B 站 WBI 签名算法，用于 API 请求鉴权：
 
 ```
 请求流程：
   ① 调用 /x/web-interface/nav 获取 img_key + sub_key
   ② 对请求参数按 key 字典序排列，拼接为 query string
-  ③ 将 img_key + sub_key 经混淆表 (MIXIN_KEY_ENC_TABS) 重排 → 取前 32 位 = mixin_key
+  ③ 将 img_key + sub_key 经混淆表重排 → 取前 32 位 = mixin_key
   ④ 计算 MD5(query + mixin_key) → 得到 w_rid
   ⑤ 将 w_rid 和 wts(时间戳) 附加到原始参数中
   ⑥ 发起带签名的 API 请求
@@ -198,6 +237,7 @@ bilibili-video-scraper/
 - 自动分页：根据第一页返回的 `page.count` 计算总页数
 - 智能重试：针对风控错误码 (-352/-412/-799) 自动延长等待时间
 - JSON 输出：包含完整元数据（标题、BV号、发布时间、播放量、简介等）
+- CSV 导出：支持一键导出为 CSV 格式
 
 ### 3. 数据分析 (`src/analyzer.py`)
 
@@ -232,6 +272,12 @@ bilibili-video-scraper/
 }
 ```
 
+### CSV 格式 (`up_{mid}_videos.csv`)
+
+| title | bvid | created | play | length | description | comment |
+|-------|------|---------|------|--------|-------------|---------|
+| ...   | ...  | ...     | ...  | ...    | ...         | ...     |
+
 ### 分析报告字段
 
 - Top 30 游戏（出现次数 + 占比）
@@ -245,7 +291,7 @@ bilibili-video-scraper/
 ## ⚠️ 注意事项
 
 1. **频率限制**：B 站对 API 有频率限制，默认 0.5s 间隔。若触发风控（错误码 -352），可使用 `--delay 1.5` 增大间隔。
-2. **WBI Key 更新**：签名密钥由 B 端动态下发，脚本每次运行时自动获取最新 key。
+2. **WBI Key 更新**：签名密钥由 B 站动态下发，脚本每次运行时自动获取最新 key。
 3. **数据完整性**：抓取结果中 `failed_pages` 字段会列出失败的页码，可据此手动补抓。
 4. **仅限学习交流**：本工具仅供技术研究和个人学习使用，请遵守 B 站用户协议和 robots.txt 规则。
 
@@ -253,7 +299,7 @@ bilibili-video-scraper/
 
 ## 🤝 贡献指南
 
-欢迎 Issue 和 Pull Request！
+欢迎 Issue 和 Pull Request！请阅读 [CONTRIBUTING.md](CONTRIBUTING.md) 了解详情。
 
 ```bash
 # Fork → 克隆 → 创建分支 → 提交 → PR
@@ -261,6 +307,12 @@ git checkout -b feature/amazing-feature
 git commit -m 'Add amazing feature'
 git push origin feature/amazing-feature
 ```
+
+---
+
+## 🔒 安全策略
+
+如发现安全漏洞，请参阅 [SECURITY.md](SECURITY.md) 进行报告。
 
 ---
 
@@ -272,7 +324,7 @@ git push origin feature/amazing-feature
 
 ## 🙏 致谢
 
-- [bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect) — B站 API 文档 & WBI 签名算法参考
+- B 站 WBI 签名算法的公开技术资料（相关文档项目已于 2026 年 1 月归档，此处不再附链接）
 - [requests](https://docs.python-requests.org/) — HTTP 客户端库
 
 ---
@@ -282,5 +334,5 @@ git push origin feature/amazing-feature
 如果这个工具对你有帮助，欢迎给一个 ⭐ 支持一下！
 
 <p align="center">
-  <img src="https://api.star-history.com/svg?repos=YOUR_USERNAME/bilibili-video-scraper&type=Date" alt="Star History" />
+  <img src="https://api.star-history.com/svg?repos=3579828593/bilibili-video-scraper&type=Date" alt="Star History" />
 </p>
